@@ -1,0 +1,1929 @@
+/* ==========================================================================
+   1. CSS Variables & General Reset
+   ========================================================================== */
+
+:root {
+  --primary-dark: #1A1F36;
+  --primary-medium: #2d3250;
+  --primary-light: #3b4b78;
+  --text-primary: #ffffff;
+  --text-secondary: #cfd4ed;
+  --accent: #ffc107;
+  --background-light: #f5f6fa;
+  --sidebar-width: 250px;
+  --sidebar-width-collapsed: 80px;
+  --border-color: #e0e0e0;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition-speed: 0.35s;
+  --header-height: 60px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-light);
+  color: #333;
+  /* NOTE: display:flex and overflow:hidden were removed to support multiple page layouts.
+     Dashboard layout is now handled by sidebar and main content styles. */
+}
+
+/* Utility class to prevent body scroll when a modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   2.1 Toast Notifications
+   ========================================================================== */
+
+#toastContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1055; /* High z-index to be on top */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: auto;
+  max-width: 350px;
+}
+
+.toast-message {
+  background-color: #28a745; /* Success green */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  font-weight: 500;
+}
+
+.toast-message.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-message i {
+  font-size: 22px;
+}
+
+.toast-message.error { background-color: #dc3545; }
+.toast-message.info { background-color: #17a2b8; }
+
+/* ==========================================================================
+   3. Dashboard Layout (for dashboard.html)
+   ========================================================================== */
+
+/* Main Content Styling */
+.main {
+  /* MODIFIED: Adjusted for top bar */
+  margin-left: var(--sidebar-width);
+  padding: 30px;
+  flex: 1;
+  transition: margin-left var(--transition-speed) ease-in-out;
+  /* MODIFIED: Adjusted for top bar */
+  padding-top: calc(var(--header-height) + 30px);
+  margin-left: 0;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   NEW: Top Horizontal Navigation Bar
+   ========================================================================== */
+.top-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--primary-dark);
+  color: var(--text-primary);
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.top-nav-bar .nav-left,
+.top-nav-bar .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-nav-bar .logo {
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.top-nav-bar nav {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.top-nav-bar nav a {
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  height: 100%;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  border-left: none; /* Override sidebar style */
+  padding-left: 15px; /* Override sidebar style */
+}
+
+.top-nav-bar nav a:hover {
+  background-color: var(--primary-medium);
+  color: var(--text-primary);
+  transform: none; /* Override sidebar style */
+}
+
+.top-nav-bar nav a.active {
+  background-color: var(--primary-light);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-left: none; /* Override sidebar style */
+  border-bottom: 3px solid var(--accent);
+  padding-left: 15px; /* Override sidebar style */
+}
+
+.top-nav-bar nav a i {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.top-nav-bar nav a .text {
+  margin-left: 0;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   NEW: Navigation Dropdown
+   ========================================================================== */
+.nav-dropdown {
+  position: relative;
+  height: 100%;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 15px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Style for when the parent dropdown toggle is active */
+.dropdown-toggle.active {
+  background-color: var(--primary-light);
+  color: var(--text-primary);
+}
+
+.dropdown-toggle .fa-chevron-down {
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.nav-dropdown:hover .dropdown-toggle .fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--primary-medium);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+  min-width: 200px;
+  z-index: 1001;
+  border-top: 1px solid var(--primary-light);
+  /* Animation properties */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.nav-dropdown.open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-dropdown.open .dropdown-toggle .fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu a {
+  padding: 12px 20px !important; /* Use !important to override general nav 'a' styles */
+  height: auto !important;
+  display: flex !important;
+  align-items: center;
+  color: var(--text-secondary) !important;
+  background-color: transparent !important; /* Ensure no background from .active is inherited */
+  border: none !important; /* Ensure no border from .active is inherited */
+}
+
+/* ==========================================================================
+   NEW: Mobile Responsive Sidebar
+   ========================================================================== */
+
+.mobile-toggle-btn {
+  display: none; /* Hidden on desktop */
+  font-size: 22px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-toggle-btn .icon {
+  position: absolute;
+  color: var(--text-primary);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.mobile-toggle-btn .icon-close {
+  transform: scale(0.5) rotate(-90deg);
+  opacity: 0;
+}
+
+.mobile-toggle-btn.active .icon-menu {
+  transform: scale(0.5) rotate(90deg);
+  opacity: 0;
+}
+.mobile-toggle-btn.active .icon-close {
+  transform: scale(1) rotate(0deg);
+  opacity: 1;
+}
+
+.mobile-toggle-btn:hover {
+  background-color: var(--primary-medium);
+}
+
+.mobile-sidebar {
+  position: fixed; /* Reverted to fixed for full-screen overlay */
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 280px; /* A standard sidebar width */
+  background-color: var(--primary-dark);
+  z-index: 3000; /* High z-index to be on top of everything */
+  box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-sidebar.open {
+  transform: translateX(0);
+}
+
+.mobile-sidebar-header {
+  display: flex;
+  justify-content: flex-end; /* Push close button to the right */
+  align-items: center;
+  padding: 0 20px;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--primary-medium);
+}
+
+.mobile-sidebar-header .close-btn {
+  font-size: 32px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.mobile-sidebar-header .close-btn:hover {
+  color: var(--text-primary);
+}
+
+.mobile-sidebar nav {
+  flex-grow: 1;
+  padding: 10px 0; /* Add some padding top and bottom */
+}
+
+.mobile-sidebar nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  /* Animation properties */
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: background-color 0.2s, color 0.2s, opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.mobile-sidebar nav {
+  flex-grow: 1;
+  padding-top: 20px;
+}
+
+.mobile-sidebar nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  /* Animation properties */
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: background-color 0.2s, color 0.2s, opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.mobile-sidebar nav a.active,
+.mobile-sidebar nav a:hover {
+  background-color: var(--primary-medium);
+  color: var(--text-primary);
+}
+
+/* Animate links when sidebar is open */
+.mobile-sidebar.open nav a {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered transition delays for the cascading effect */
+.mobile-sidebar.open nav a:nth-child(1) { transition-delay: 0.20s; }
+.mobile-sidebar.open nav a:nth-child(2) { transition-delay: 0.25s; }
+.mobile-sidebar.open nav a:nth-child(3) { transition-delay: 0.30s; }
+.mobile-sidebar.open nav a:nth-child(4) { transition-delay: 0.35s; }
+.mobile-sidebar.open nav a:nth-child(5) { transition-delay: 0.40s; }
+.mobile-sidebar.open nav a:nth-child(6) { transition-delay: 0.45s; }
+.mobile-sidebar.open nav a:nth-child(7) { transition-delay: 0.50s; }
+.mobile-sidebar.open nav a:nth-child(8) { transition-delay: 0.55s; }
+
+/* ==========================================================================
+   4. Dashboard Components
+   ========================================================================== */
+
+/* ==========================================================================
+   4.1 Dashboard Hero Image
+   ========================================================================== */
+.hero-image-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+  height: 400px;
+  background-color: var(--primary-dark);
+}
+
+.hero-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.hero-image-container:hover img {
+  opacity: 0.6;
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-primary);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+/* New Feature Section */
+.feature-section {
+  display: flex;
+  gap: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.feature-image {
+  flex: 1 1 45%;
+}
+
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.feature-content {
+  flex: 1 1 55%;
+  padding: 40px;
+}
+
+.feature-content h2 {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.feature-content p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.feature-content ul {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+.feature-content li {
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  font-size: 1.05rem;
+}
+
+.feature-content li i {
+  color: var(--accent);
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+
+/* Quick Loan Section */
+.quick-loan {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+.quick-loan h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+}
+
+.quick-loan-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.quick-loan-options .option {
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--primary-dark);
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.quick-loan-options .option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.07);
+  color: var(--primary-light);
+  border-color: var(--primary-light);
+}
+
+/* Enquiry Form */
+.enquiry-form {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+.enquiry-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.enquiry-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.enquiry-form input,
+.enquiry-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.enquiry-form select:invalid {
+  color: #777;
+}
+
+.enquiry-form button {
+  padding: 12px 25px;
+  border: none;
+  background-color: var(--accent);
+  color: var(--primary-dark);
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.enquiry-form button:hover {
+  background-color: #ffca2c; /* A slightly lighter accent color */
+}
+
+/* ==========================================================================
+   5. Reusable Page Components
+   ========================================================================== */
+
+.page-title {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.service-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.service-option-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 30px 25px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* cursor: pointer; */ /* Removed as button is the new action target */
+}
+
+.service-option-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.service-option-card i {
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+.service-option-card:hover i {
+  color: var(--primary-dark);
+}
+
+.service-option-card h3 {
+  font-size: 1.2rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Special card for Gold Exchange - Centered with Arrows */
+.service-option-card.gold-exchange-card {
+  grid-column: 1 / -1; /* Span full width to center it on its own line */
+  background: linear-gradient(45deg, #ffc107, #f7971e); /* Attractive gold gradient */
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-option-card.gold-exchange-card h3,
+.service-option-card.gold-exchange-card i {
+  color: var(--primary-dark);
+  position: relative;
+  z-index: 2;
+}
+
+.service-option-card.gold-exchange-card:hover {
+  background: linear-gradient(45deg, #ffca2c, #f5a623); /* Lighter gold on hover */
+}
+
+.service-option-card.gold-exchange-card:hover i {
+  color: var(--primary-dark);
+}
+
+/* Arrows on left and right */
+.service-option-card.gold-exchange-card::before,
+.service-option-card.gold-exchange-card::after {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900; /* Use solid icons */
+  font-size: 28px;
+  color: rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.service-option-card.gold-exchange-card::before {
+  content: "\f060"; /* fa-arrow-left */
+  left: 30px;
+}
+
+.service-option-card.gold-exchange-card::after {
+  content: "\f061"; /* fa-arrow-right */
+  right: 30px;
+}
+
+.service-option-card.gold-exchange-card:hover::before,
+.service-option-card.gold-exchange-card:hover::after {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   6. Careers Page
+   ========================================================================== */
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: -15px; /* Reduces the large gap from the title for a cleaner look */
+  margin-bottom: 40px;
+}
+
+.page-subtitle {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.job-listings {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+}
+
+.job-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px 30px;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--accent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.job-card h3 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.job-location {
+  color: #777;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.job-location i {
+  color: var(--primary-light);
+  margin-right: 8px;
+}
+
+.apply-btn {
+  background-color: var(--primary-dark);
+  color: var(--text-primary);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block; /* Ensure padding is applied correctly to <a> tags */
+  text-decoration: none; /* Remove underline from <a> tags */
+  transition: background-color 0.2s ease;
+}
+
+.apply-btn:hover {
+  background-color: var(--primary-light);
+}
+
+.service-option-card .apply-btn {
+  margin-top: 20px;
+}
+
+.print-btn {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.print-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   5.1 Loans Page Content
+   ========================================================================== */
+
+.loan-content-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px 35px;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.loan-content-card h1,
+.loan-content-card h2 {
+  color: var(--primary-dark);
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.loan-content-card h1 { font-size: 2rem; }
+.loan-content-card h2 { font-size: 1.6rem; }
+
+.loan-content-card p,
+.loan-content-card li {
+  color: #555;
+  line-height: 1.7;
+}
+
+.loan-content-card ul {
+  padding-left: 25px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.loan-content-card li {
+  margin-bottom: 12px;
+}
+
+.services-hero.loan-content-card {
+  background: linear-gradient(45deg, var(--primary-medium), var(--primary-dark));
+  color: var(--text-primary);
+  border: none;
+  position: relative;
+}
+.services-hero.loan-content-card h1 { color: var(--text-primary); }
+.services-hero.loan-content-card p { color: var(--text-secondary); font-size: 1.1rem; }
+
+/* ==========================================================================
+   5.2 Loans Page FAQ
+   ========================================================================== */
+
+.gold-loan-faq .faq-item {
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  overflow: hidden; /* Keeps border radius on children */
+}
+
+.faq-question {
+  padding: 20px 50px 20px 25px;
+  cursor: pointer;
+  position: relative;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+  transition: background-color 0.2s;
+}
+
+.faq-question:hover {
+  background-color: var(--background-light);
+}
+
+/* Icon for open/close state */
+.faq-question::after {
+  content: '\f067'; /* Font Awesome plus icon */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+  color: var(--primary-light);
+}
+
+.faq-item.active .faq-question::after {
+  content: '\f068'; /* Font Awesome minus icon */
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
+
+.faq-answer p {
+  padding: 0 25px 20px 25px;
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px; /* A safe max-height, adjust if content is longer */
+}
+
+/* ==========================================================================
+   5.3 EMI Calculator
+   ========================================================================== */
+
+.emi-calculator-card .calculator-inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .emi-calculator-card .calculator-inputs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emi-calculator-card .input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.emi-calculator-card .input-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.emi-calculator-card .input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.emi-calculator-card .input-group input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 75, 120, 0.1);
+}
+
+.emi-result {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: var(--background-light);
+  border-radius: 8px;
+  text-align: center;
+  border: 1px dashed var(--primary-light);
+}
+
+.emi-result h3 {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.emi-result p {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+/* ==========================================================================
+   8.1 News Page Modal
+   ========================================================================== */
+
+.news-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(26, 31, 54, 0.9);
+  z-index: 2000;
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: flex-start; /* Align to top to allow scrolling */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 50px 20px;
+  overflow-y: auto;
+}
+
+.news-modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.news-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 8px;
+  transform: scale(0.95) translateY(-20px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.news-modal-overlay.show .news-modal-content {
+  transform: scale(1) translateY(0);
+}
+
+.news-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: #aaa;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.news-modal-close:hover {
+  color: #333;
+}
+
+#newsModalBody {
+  padding: 30px 40px 40px 40px;
+}
+
+#newsModalBody img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+#newsModalBody h2 {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin-bottom: 15px;
+}
+
+#newsModalBody .news-meta {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+#newsModalBody p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.load-more-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+#loadMoreBtn {
+  padding: 12px 30px;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   7. Media Page
+   ========================================================================== */
+
+.media-section-title {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-top: 40px;
+  margin-bottom: 5px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.media-page .page-subtitle {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.video-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.video-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.video-thumbnail {
+  position: relative;
+  background-color: #333;
+  background-image: url('https://images.unsplash.com/photo-1585079542-42b87fb42163?q=80&w=1480&auto=format&fit=crop'); /* Placeholder image */
+  background-size: cover;
+  background-position: center;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-thumbnail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease;
+}
+
+.video-thumbnail i {
+  font-size: 60px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.video-card:hover .video-thumbnail i {
+  transform: scale(1.1);
+}
+
+.video-card h3 {
+  font-size: 1.2rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+  padding: 15px 20px 5px 20px;
+  margin: 0;
+}
+
+.video-card p {
+  font-size: 0.9rem;
+  color: #666;
+  padding: 0 20px 20px 20px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   7.1 Media Page Video Modal
+   ========================================================================== */
+
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 2000;
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.video-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 960px;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.video-modal-overlay.show .video-modal-content {
+  transform: scale(1);
+}
+
+.video-modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.video-modal-close:hover {
+  color: var(--accent);
+}
+
+.video-player-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  background-color: #000;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.video-player-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ==========================================================================
+   8. News Page
+   ========================================================================== */
+
+.news-filter {
+  position: relative;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.news-filter i {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+#newsSearchInput {
+  width: 100%;
+  padding: 15px 20px 15px 50px; /* Left padding for icon */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#newsSearchInput:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 75, 120, 0.1);
+}
+
+.no-results-message {
+  text-align: center;
+  padding: 50px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.news-article-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.news-article-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.news-image {
+  flex: 0 0 280px; /* Fixed width for the image container */
+  position: relative;
+}
+
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-content {
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-title {
+  font-size: 1.4rem;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+}
+
+.news-meta {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.news-meta i {
+  margin-right: 5px;
+  color: var(--primary-light);
+}
+
+.news-summary {
+  flex-grow: 1;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   10. Contact Page
+   ========================================================================== */
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.contact-info h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+}
+
+.contact-info {
+  background-color: var(--primary-dark);
+  padding: 40px;
+  color: var(--text-primary);
+}
+
+.contact-info p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  color: var(--text-primary);
+}
+
+.info-item i {
+  font-size: 20px;
+  color: var(--accent);
+  width: 30px;
+  text-align: center;
+}
+
+.info-item span {
+  margin-left: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.contact-form-container {
+  background-color: #fff;
+  padding: 40px;
+}
+
+.contact-form-container form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 75, 120, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-submit-btn {
+  background-color: var(--accent);
+  color: var(--primary-dark);
+  border: none;
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.contact-submit-btn:hover {
+  background-color: #ffca2c;
+}
+
+/* Responsive adjustments for contact page */
+@media (max-width: 992px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-form-container form {
+    grid-template-columns: 1fr;
+  }
+  .contact-info, .contact-form-container {
+    padding: 30px;
+  }
+}
+
+.social-media {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--primary-medium);
+}
+
+.social-media a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-right: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.social-media a:hover {
+  background-color: var(--accent);
+  color: var(--primary-dark);
+}
+
+.map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  height: 400px;
+}
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.news-link {
+  color: var(--primary-light);
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start;
+  margin-top: 15px;
+  transition: color 0.2s ease;
+}
+
+.news-link:hover {
+  color: var(--primary-dark);
+}
+
+.news-link i {
+  margin-left: 5px;
+  transition: transform 0.2s ease;
+}
+
+.news-link:hover i {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   9. About Page
+   ========================================================================== */
+
+.about-hero {
+  background: linear-gradient(rgba(26, 31, 54, 0.75), rgba(26, 31, 54, 0.75)), url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?q=80&w=1470&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  padding: 70px 40px;
+  border-radius: 12px;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 50px;
+  box-shadow: var(--shadow);
+}
+
+.about-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.about-hero p {
+  font-size: 1.15rem;
+  max-width: 750px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.milestones-title {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--primary-dark);
+  margin-bottom: 40px;
+  font-weight: 700;
+  position: relative;
+}
+
+.milestones-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--accent);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.about-milestones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.milestone-card {
+  background-color: #fff;
+  padding: 35px 30px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  border-top: 4px solid var(--accent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.milestone-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.milestone-card i {
+  font-size: 40px;
+  color: var(--primary-light);
+  margin-bottom: 25px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.milestone-card h3 {
+  font-size: 1.3rem;
+  color: var(--primary-dark);
+  margin-bottom: 15px;
+}
+
+.milestone-card p {
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   9.1 About Page - Leadership
+   ========================================================================== */
+
+.leadership-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.team-member-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  padding: 30px 25px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 4px solid var(--background-light);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.team-member-card h3 {
+  font-size: 1.4rem;
+  color: var(--primary-dark);
+  margin-bottom: 5px;
+}
+
+.team-member-card .team-member-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin-bottom: 15px;
+}
+
+.team-member-social {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.team-member-social a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--background-light);
+  color: var(--primary-light);
+  text-decoration: none;
+  margin: 0 5px;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.team-member-social a:hover {
+  background-color: var(--primary-dark);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   11. Page Backgrounds
+   ========================================================================== */
+
+/* Login page has its own overlay */
+.login-page-bg {
+  background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAMAAzAMBEQACEQEDEQH/xAAcAAADAAMBAQEAAAAAAAAAAAAEBQYBAgMABwj/xAA8EAACAQMDAgQDBQYEBwEAAAABAgMABBEFEiEGMRMiQVEUYXEyQoGRoRUjUrHR8DNiweEHJCVDcoKSFv/EABoBAAMBAQEBAAAAAAAAAAAAAAIDBAEABQb/xAA0EQACAgEEAQIFAwIGAgMAAAABAgADEQQSITETIkEFFDJRYSNxgZHRUqGxweHwM/EVQkP/2gAMAwEAAhEDEQA/AKpbUDstfKgT3YTDb4GcYogJhMIVaICZM7a2ZMFaybPYrp00d1Tu2KFmAnYgV7fiFN55GMVO1/sIYEb2FjHfaatwrYYg4/CnUhnG4yey7Y+2KAMMR3pgjjCoD2pggtDF7CmCLmjx55ohOm0SYooJm032awzRF1wO9AYcXTx0M0QCaKsMYDA3SgJjBOYXzihMYJ0cUImzyVszE2BpLx6Q22qVxHQsmo2midIz5aUYLDmOCqg819EcL3PI5nSNWmysak49qUbwTgTDx2Z4FACrZEmcAGlrqMHmdj7TnJOIELSDbjuaXZqhnAhhSYAt9lt5UhCeDSW1JzGiviEz6nbCJW3LxRfNHGBAFZzmcmNvdqpWVRn0pJuLdzhx7QLqCMQWa4Hc8YpoP2nIctDeiPGmWe2kmYQjzeH75p1ALttzxFavCeoDmH6tZJZS7gQUx3NPtY1NiDS/kECiljOCrKDXLqFjipndZVHd1zTfmVg7DN/iEH31ovmVg7DN0nRuN61nzKzChms7qBktwKw6gHqcFi+6ukaPK+hqZ72jFSZi8K4gyW5xzS01RU+qH48waW0JGV7elVpejdQShECltaaZoMGa2oDGAzR0wMUEYJwcVmYQE1jegaPURpbFameFOzGpHHMNZ0jPlpcxu5zl162m1COGBtw9x2zmvR1G9lzPKrUjuNWvr+xnW4trcSRHhxmkUFqjumWVraNpMzFLc6nOLmSBU2PnFLsZnO77zAq1jGYz1RIntd7AYK4OKTYuMGBQTvxIbWNVjsUS2TmRv5U/T6ZrTvPtPRZgsn728urwBY1ZY/8ALXo10pXyYgnPUN0K7nifbK78dsihtqRuos5Bl70tqFteb7a+UM2fKzDgj2rtIa1bZZJtSjAbljHU9Hjs5Eu9NLQuDhgh7imfEdMKcPSYqi8v6bBDoJo5bFo7pSSV8wcd63T2A0kWdwHQizKdSTu9CVIzcpcGOMkeT2qKxcDMvW7nEU65ZXlkBLZzGWIjLeuKFNh4aOrbPcmW1efeVac5FVjTg9CMBWFWN7czSBUnPmwKW9Kr7TmC4zPodh07JJYo73b72XOAMim00blyJ5tmpCtjEWPpvw8jROc4NEKcygPkZgdzZyht9s+35e9Lt0ykZjUearqM9uwjuIXI7FgOKg8RHKmNyDCRf2snl3KD86Yl9qfUJhQGbMscn2SKqXVK3cDxkQO5h4pwYN1NEAljOztXGNTmAdpORQP1LEHEZ2jVM0wiFlqmaEonSNvLSj3BYcwDT9Ga7fx7bgCTcB8s1a1h5E81mwMGW1hqcCRzaXKn/N+GWRQM7s/71dprqhSVZckzzrq2Lh16i3RrfUINLljvztnA3Z7VA4CnAGJQSDiG/HwanoBtbbAuduD8j71Vdfp3oFYHqi1qeu3cx4nzIaVL+0JHuiTsbzZrbLwqYWW7CfUZRxajptvalEi3OB6D1qApaTzN9siOtJ0ltRtFuI7cq7dt4xin06W604QZk9uoCdyh03pyK2YSStz/AAjsK9Sn4Pj1WNI7NaSMKIZfajYaamJXG70UHJp1uo0elGByf6xNdNtp4gdpeG/fx5IwluOwPr9agq1a2EsRgR71eMYB5k/1RIy3I+FBMPeQelQ6pq2fgyzSqdvMVabqzLFPA6q6n7Of5UpsKJS9RJzOkvTek6vZ7cbbknOVODmqKL2XoxFxbPq6h2h9H2+mOhuAcD1aic2ucvwIt9QCuEj+7vFgKx2cy7V7qDS2tZDhDxE11b+XHMX38BkjacNzini0iOTA4izSrS7urgrtJVT3+VLe534WG7LX2Y5ureFIWLx8jvU+8Jw0BHLdSfg0yzvLppmQLtNOVwRtjmYgQu40xZrWSSylXdHx/tTq9GLORF/MbZJaV1BJd30thJA5mjYocDis1OjbTjdniOqvFglJBEVZTJCcHuPavPNxaNz9oyuenoZbVptm1sVUivt3GJTWkWbZOCB4TyuawsD1PQ3gzYNSmEaJ1j+zSSJzdzSCY2lrIbO48Rxy+D7CqGYlgMdzyyobue0fqGRby21Ka3BwdhPqQap07fLXZ7xAtp8ibRPoe6x1a28SORWLrjG7kV6eoTT6lPIp9RnlDyUtgye03RV0/qDdArtGVwV+7XlIHFvjK5lllgerdmH3fSkV5eSyyHYshyQKsT4VfY+TwIpNbsTb2YRbaHoul4Z0i3r2L/0qxdPo9L6rWyYpr7rfpEIu9XS2gLW0DSAdtowKTb8drHpoXMyvSlz6jJLU+ptSlIRgYEY44UjAqC3U6nUdniW16emvknJjO1h0ye1UyukkhGCScmoNiDjM4vaDwOISscIjNvFMNp4wTWis42oZm453MIv1zTL22tCYQsoYc47in26Q0kFuYyrUB2wOJM2FhPEryyRtge9IucdS82rjAnWHVFtJhKQyEGuRCCCpi2XyLiVaa7FqdksRQ7nHcVbZq99WwjmeeNKarMweLQw0odZGBOMjNSJUXwBGm8CNNbij0/QG2AuygDjkmvT1elSnTrtPJkmncvdzJLpbqORriaLhVPbdXnPu03qXnM9C6lH/AIlDG7TXDqTkMSflUwDWtFkBFEzc2BtraRlAGad8u9Q3GYt3kO2JtCs5JJrpVm2CU5I7/lVmn1DY9M29VXkiH6D0taaO08487yMXLtyaTqrbLTl5P5APSkwXN3qBjjXag4zUSLubiWAbK8mc+odWuoLf4aIEe71abCBsMXRQpbdJlNVKL4Vwv/sKV4cnKy7BEYs1pJGu00o7hCS4wqLT96Bo28tAHmnUYMUdHaJLb2DvcNt+Lz4Sn2/s1frLPJYoEhDbcyiTpOG4WKFrpEjgHmVCM5oqaGZ2ywizrCg4WMbGDp/p/lbhfEHru3E1ZX8rU29mywkztqL+AOJ686xtIEL28DuP48cUZ+KgEiqvBmp8Oc/WYovurLi6i/5eYBj92PvUNut1lpw5wJSmjqQ88xAsHUN9M00cZPORvelBaW75lBdEHAxLLp/UrlYDFq8KRMg9Dwa6qyms4xILqGPqWdb/AKg0qJSXCOwHAwKM6lX4RYKaWwyF1LrK2W6MVjEHnkbA+tdXomI3txKyNvBhVvb3aIbiZZp5VIZgo8iZ5waUwY/QOB7wsoeD3KK36qniaGM2UfhHAd5Hxg1ZpdYKuxmS2aMHLAyujPiKCLeMqwznIwa9yq17V3eMTzTx7wa++Dt0Lz2QYepWMGlX3V1DL0/0jag7nAecNMv9Ouywt7YJt45UCpR8S0hOFrjLKbk7aE3MUksbNAmxgPL86GyhrgXqTEBLFU4YyH1aTqe3NwvwbTQn7Ldyo9cYqM02ceQHP7T0K/CT6TOnT3T8Go6ZHdxsY5nGe3apSj2sQPaHdqfE23E8Hm0x5La6nAfnY59anO+tvQI0BbVzPC/Mqpb3F1vz2x61tl9rjrictKpyJvPHJpMMl3D5wVJ2r6UussSAPeYWDnBg/RvUF/1AbiN7dljRseIRgYqvU6Y1EBTmTPsUbjKG0jtY5pFLAFDjOaHTpWCSTMtdyontSjtblPDcAn3obrUU/mFTvXmTf/5TxrziQ+FRUWmw4AljatVXJgnUWmPYRqtqCQnBPvTNux8POrIsGRFtlql5HbIpc/jQvp0LEiPFYYZlLpjxajbSwKxhlhBRXbhccEgUIrYkZPXM8922sSPeBfsyZTvscrEwxktzge9IbUDPqlSmvABE3k6eH7Me53brgcqmcZNNV8jOcCLfUeraojK9vtLTpYadNtSV49r4Hb3Oa9BtXWaQlKeqSJp7mu3N1I621S1hcWejwqZDxvY5/Wpnosb9S04EtwBwI8sxdW0TSFpppD9/simpnORkDAghUZsGcrSVJppZNYnYwqDiONvWmoEX2m2Vk8VycbTrm7lcB2aPOVXPJFU+etBwIwK2PUZiGx+DYM1usZByCVBOa5rt/GYYSuPrPqK7tdMuLW1Us8+c709cYz+ldXY6Ka84U9ye3Tq7BwOpMXd7rU0irIkexe4wRmmV06ZRkGaRbngcT6bo+o3ml9MRahd3sMgOAsBHC/LOarS6yigPW2fxPOetbbtm3H5hdp1a94yQ21l40rDOA/Bok+K2P6SnMGzQ+MbiZy6gm1F9KVodGmjnDZJiYEj8uaDU1tbWB48H7ztOyB/U8VdMdQ6klzFFqbzQQMcfv4+31JFT0ai2lwiv6ZTqNPUy7kHMuL66aPT5ri2khZ0Qsu5sqfrivfsvTxEq4M8pa23gEYnz7pzreOyM0NzCpy5Y7TjBJ5H0rxNPe2nYtjIaexfovIBg9Rf1dqh1H4iT4I7AcoVPNS+QW37lOMx1VDVV/ec+nrnTri3jl3bZY+WDnmkXVOtm1uoxn3D0yytrsanZNDBbMceUkiiABGxB1IjhG3MZ2t2isLH4Kwg2Tk4YqPWs3HZtx6oOw2Pvc8RZqOn3cYHJBP2jiprFargiULYjniddN02Z4vNKxb50tKhceJj3BDOIk1fTbo7oS0Y5XPqKqFbaRgSJh8do4gyatdTmV73TZkgHAkK8Vupraz9RTxNTanpBhNtDYywrL4Aw/mGfUVL4bTzCNpHvJ+6uobLUV023i8WA5ljYnPGe1VGpypsz+Jy4bCmc9N6kvGuZoHiV7ZG7EYxXXaVdgOeY1as8xwt/aXm1PHa3b1Vu1RmllH3nbSntEPVuhzXLxPaQSTxAEMY2yGPzq/R6lawQxxMHq7gOmdM3FvJHPLOkDHhYl74pl2vRxtC5/MJFA6lp1Hq8F1okemabviuE27zjGwevNPs1dNlCIEwBIatNYtpdjJwxaFp9kxleS6vHXl2kI2mkh2cAbZVttbrgQjTNSVenrm2giEt62Ck78Y9sVljj/wAbrwYvwkWBgZMzW+rzzGSS7Xeew9AKctmnUYVZWot7zKZru1sOm4YobX4vUmlBa4XuBnkflxjtS99FiFCuD95Ni7zbieJ2srX9rvGhmSOQjzeIMVGBtbAMbYz1DPcxeac7yG2SWN1J2gICRn3oFs2mCCCN5E3ttDm0dYy92UlU8MvBAojqSz+kYmizyjGMw1+qL9HaO21RZEQYbfGM/nVnzmpC7SxxE/JVHnbHVvp19q1gJZNTtgkgzhIc/mc0yvR+ZN5YCStcKW2hepA9SW2pW2qGPxUaGMbd0Z+1+FLqFSKVnoUfq4YCLI4FtpofFYSlnzIAewomYuDjiXbcDMb6jp+JhNo18MkDdBIcg/0qWq8Y23L/ADJwrE7hxMpoMjxrqFxEsBUeZFfk1vzX/wCa8wWKlue5X6V8XHpCm1uNuRuyDyPlSVdkzt95HbtNnrE56ZqcSalEsV3FcOTiVPD2sD64J71Qp8LK7dQLB5EI6j6a6Wa/ZWjkVI8bSwwH+QpmstV7wSOBJq0K18Gdr6SWUQ/DKse1stuFUXavcVKpiBWoGdxifqq91yWOGPSLKFgDukLyd/kBimanX03qFbj+MxmnqCEkmTc+sdYzWrWk+gBVP/cR1P8ArSPLTs2h/wDIx6IBZuJiM33VduFhg0658NRgApnFaj0gfXK2CE5m3TV1b3M80Vwsa3Cjazg9x71Lra2VQV6M7g9QkWi/ETPZmOZSc4DYdf60s2ZUBxiNRsDE5vGJGCyeV/Zxgmt65XqMDA8GejuLuybMUjJj096whH9pprUw2HW1kYfHWyuf40GGpTab/CYs1MOjGdvddPT2F1bsirPKD4ZlHY/Wq9M1dSN5UyfbEktrv3gjoRDNpF+tsDFHDM44DIQQRSVvr3cnEtFgIwYoPx8McqT27qQO5XbgfKq8UsQVMAEe8zo8jXxEFnCZZfUydhXXV7DljiHvGMymgs7YfurvW7S2mxzHGRwPnShSO8SU6jB4EO1PTZtPsWuSY5bcAbJIj70h9K6EGFVqUsbb7xLaapf2sxaHYFB/7q1xqr7lD1q4wYwfrK3LhdRsI5X7blIx+tZ8ozepZMdKV+lsTW4uNGn2z3aJaxdyq9zS61t3bRzGZdF4Mmri8tpZ5Ws8mDd+7ZhzV60soAfuGh3DnEXW/wC1bqYhY5XTPlJU9qoYUIv5h0kqTN5LK9guXDIzM4Gf8ooVtrZePaZY7bsiUNj01eSWiTQTK24dmPIpDPu9p3zCrwZ3cXMUkNrduzpvClM5/IetS4XJK8GY5U8iZ0xr6G6vR4Fw0iv+5gEWzIHY8YwPemlUbaV7+8kZuDHvSgOs3dzq91aJbXERw6A55x3Gap+Xa60sX4HP/RJbGNaBMcmd7bWpr7UYHvmijt4mbsDz9eane/e4Dj3jTphXUdncs4bq0uAPCkjfP8JzX0aWaSwdTymSxe5v8PCecCj+S0zdCZ5HmpsoTSW+E0nqELmmnwEf8R/Olf8Aw6TfmDPzHZzXU88rwvsZiTjtWWIiqN3M9NCxJxDrG8OnsbqaCVnzjeG70myvyjYp4h7toyRKK36wguIsSWnjKByndv0qBvhzIeDiGLFIyIygn0+7jUxSvau3aKccUhksU88/tGrYZvNp0gG5otyfxRHP6UsWr940WQJrDeSInBI7hhgimi3HtD3gzCrc2hJjeRSPZjWko/BE4hTMjqDUYsrKqzxn0cZNd8rW3RxA8Ynk16xAbxtN8HfwzQEiuOlszlX6gFCOJvp03S8MM6RRPGZvts43H8zW2jVsQWPUDxbeo703UtGh0n9ltfhrcvuUMeQc5pbPqG+sRTU4bevcobW76fktsSNbbeMkkHNHV4OnBk9i6gNkSW6mtdLe+STSdONwpXPl4Xd+NMteoNip8CU6drQnr7g0lwk1v8NqNup2/wDbTjB+dShSDmsx+0mDvfC1tW8G0hVF4XimKhZ+WmEYgd1rt1FbR+C6KSPurTE0lbMdwnEkDMnJNYv3n8R5icsAfL3r0hpawmAIjcxYSmtNbmstRWW5nZLFVBdPfPyqBqN1ZCfVH3Ascr1OurdTWdzd+Jp8TCMEFCwwSfel16F0HqPM6tCq+ozinU+pzzLmYAdsg4NG2krXqYVXrE6zajIGAywVu4DcMKBEIBwYS7Tw3tFN8Ht7kS20kig9sHtVVJDLhhC74lrpdjdXui2epF38RspJhtp4PB/Khes1p5K/vzPPcqbShhs17rNrsMDy+F/nIpS6u0LmzgftMGnRjgRxpPUcr28hmCu8Q5BYKW+npT6/ij1HnmT26TnicU68sWyGinDKcEECnt8Rs7E0aB58U1i1lh1N4LT92d23NOqZdnr9pTYSfo4jPSLgabfxfta28a2g7+XIJqdwHGazgmGwfbtMD1q7sv2pPquiqIQz/wCFt7D6U6tXZfHbFAKg3L3B5r281PZEECux5Ze5FctVdOTDNj2jEsLL9qQrFDGrOkajL4ORXlWLXZkkSpdqjGYXZ6j498Y9TEK24YgysvalnTLgbTia7YXjubfE2JlZVaSEE+VjypHvS2SxeuZq7iJsttFcj9xLbTfjg0JZk+oEQg+OJpLpUe074ZI/cgbhRLeQeDGeXiBnRYG5jlQfJhimjUv7zt4gtzogJz+7P/iacmpPU7IMCuoPh7d40R2PcgHmnoxZhmBZ9PEd9Fp4kb3U0EpCDDBm4B+Xz+lT6zduCriSsfTzwY+v7Kxm1J2vJBC2AfDU8gmpAzKcYmoWCZE4ajosMkKRWpVlznvzijUsDuE5LMfVFj6XHbP4l5Eq24GF92PyFEXcjA7jdwY8Tpo2l2LXjssCBs8B+Tml3XXFcAznAXmK+vtPEUiugCLKPNt96q+G2N9LTgd1fEl7QEhd3p3r0rDCX1CMI1KsMCpzzMZSIwUGWAHBJHapzw2IvHuJW6F0hcarHFLfxtDCvODw0n9BVen0lrksOpNfrVThe5eWmnpDGYGUeBt27B2q3T6MoxDcg9zzHuLHd7yW6l1yV0l04WwjNu2CxPBx7V5/xDUeQCgjG2epotNjFpPchL7qWeIeBEACpxu25/KpqtCpO4yuxxnqDW0Go6jELlIpGVuxC4pljVVttJhJYQO5S9adMPIgvLJRvH26qb9M5PUgrfPEkotSmtb82N/bh45FA3e3zpTUpZX5KzzG72DbSJm60GKGf4qEiS2zlgPasTVsy7G4MI1gHMadKWLz6jLPYoixqcb5VyFHsB70Gpv8dYVuSYsqO5fTnUdL0ue7ne2LqN0MHh4ZwKPxNXWrWcZ9pMWDvtWSPXUlhe9O2uq2TiO7ucCWFe2PXIqpK6VwQeZqtYCVPU5dPf8AEPRLXTI4NS0Qs8Y2hljB3fPmnpSEzkZiHFhPBkZrPUXxGtXN3o9j4MMjZVD6DHyrhpExhzGpdYBgQGy6l6jFyIbWSaSRvsRAbjjNFZ8P0hXLD+YI1F2cT65a2l/O1srtHteIGbxU5VvWvmfHXu2jiel5RtyYVc6L4sLSWclpdEDzLG+DTzpHUZDRa6sZwREUegPq6xNbj4VC+JSTk4FANR4jhuftHPYFEe67pFtYdNA7hbwQHdv+830+tOp09zDysJILt1uO5Ba3dG/NrfQXLB5EwxXOBj/WqaUKFkdZYApA2GNrO+u7S2jnM7l5BtAZg3HvSW25wgnCrceZh5Xuo9iyM+PMS3vU+CG3GPCqsIs8w3EQ8TDNJn8OP9/zosgoYNq+nM91dKtwng7WZkyTgZxWaXO/cOoNIAU5khZQsJJNynKjO31r07OeoxMAZlHoOjvqTFZZFt3zwH7ke9SW5Q4i7L1Uccz6RoHTGn2WyTHjS9xJIP5Cr9Jp1cj/AFni6jVO3HUoJbiKEbS3m9FHc16d+qp0q89/aSKjNzNIpi7ZZWUc96Cm57uShE1lA6Mk+o7Txo7i9MTb1IDAMCMdv6V83qaLmvcke2Z62lvChUzxIx9H/wCZ8AorMW3FB2x8zS11B2Zl3GMmW+m6A0tojtGAD9kEYwPpTqvh1lq7jPOs1YDcTXqDVYrSIW6shlkDLg1dfYNpEGtCTmfG7u6lg1ub4kbj9n6UaVBqRtlCW7bMnmPulbdr+d45bvwkbgK3INRaoBACBzHM+eZfaRZW+gWnj6i52LJ+7WMZ3n5AUmisNaLrOAJJqLvINiCc01my1+5leQLFKhKLFO+Hx9PSg17O1m4kkH3nUq1Q6hGlaNGupTIIFa2C5G/kA+wo9KpsHJmW2kCTOqdEJfajNJA8cKeIcxYzii+darK4zHKy4BM5P0tptvEyytcLjCs/h4XJ4H60ka21iMQ8rg8QPqHTl6PtIY9JTxLkqXnnYc8+mfSrNPadW/6h/iJTrIEJ6c+OtCNZnmeeyMRMiod3OSe35UOoKMfGBg/eMYAjuEaJ0q89+dQbx7OKSRpPBR8FsngHFCdWxXxryYNuxePeV2oahY9O2u64XfLjMdsn2j8z7U7T6NaT5NRyfYf3k4FmobCdT5xrer6h1Hc7rhysak4jBwkYqp7Odzy5a0oXC9zTSLGzuFi074pBcR5O0tgNk9s+9LsawsbMRWFRQBDLi3SUi0ZSiwZCyK/Kk9x8/eptxQ5lVYyOJ1srXZKQLkA/ZwUz7+1LawN3DYsoHEZJoTbhcrqO4pjhI8Y5B9awvWBjuTtqWYbcQa60wwyS+G5mnYEOruQTxnGOx+lahJAUDEEMPeJLizlvJfCVhBHvbeq+Xbt7/OrUtCjLdwbl3AFTKDQbd4pbZYFaO3MhSbxFy7rjufYfKlPahYEnmK2MBgyiGtSvYLb2cpQpmIyYyzHPGPaubWeOvapxFjTAtuMfaNClrGkc7tJNjlmOTmvR+G/Cyq/MXcsf8p5up1yNaa16jWRVZWBU/LHvXtLJyJL3xj+H1NJmVI5QFRvQYPJz7cfoa8b4vrUqGwfURxL9Ih3Bj7Qbpa2s5rg+GpkjUDEh++e34ivE0WkL2BrBLdVqDtwJaRlWQEMD/wCPavr61AUYnknPvPimvm9h1K6fUEDOnKMPVflXy7gscE9z3K3G3iKNSu7SKJLhLdZGfGc966qpyxTdDJAGcQ+GSKLT/i1VUBGfLSHUtZsMaSqrmMdC6zL6aLJnij8xyZlJKZ9QaouWyuo1ldwMl2I77+oTZXWhabFIAf2hJIxdptqkjPpmomW2zGRth4ZuptadTNbR/wDTIJmj8cHaTl8eox7VTQrVsN5g2Vhhz3MzdaLPrFxHe2awxKRhQ/nXjvkVmt062t5Kx3MppKrtzOt51Dp89sYC0sseQcNIB2Oe9Qrp7QcmNFZzFur6hq/UaDTdKtIfCk2+JPnIUD0JqiiunTt5bScjofeYyBBnMqekOlv2RZvGZjI8nMrHhBj2Fawt1z5QYA/7yZLZaq8Trr3Utlo0LC3dXuCMGX2P+WnVlKTt043N7sfb9pRRo3uG+3hZ89bWZ9RuJE8NsS/adjyfqfaieoj1u2TPTHjqGFWUOjaPafAmS7XxI4hvaIdz7VDbdYX44/MjtfnC9mAprqXbCPT7OCzJOFEcAd+PcmqXq2fVz/MCun/7M05S6fd3CeJcTSlnkUKxG3v8qBbwOFEfuAGBA9Wsb/Q7lQZCd2fsg44plL13qeMRYsJGRzHugazFaIpvZ42uCfLEfRfc/wAsUo1+J/IgzBsU2YBnOaNpZrQmUnfdS3czE9hjgZrl1GSxbvj+vvM8e0Yit9SmuEtJb9Elkl3uJFO1wgOBnH2u9VFCWYJx1x+ZikL1KrSIy1vaS2+/4eRRvZclhx/WqK9Om3JGZPbYdxhc81wmrLBDZRCBSPEumwPDPpk55J/GkvRSt25h0RF7ia/qOY002DVYHkmkVJGY+Qq+Qa+0bVaSysGs8T5mvSXLbuaHrFqd4x+MmjtrbHmWI+Y/j6V5725+ngfeeooA/eTeox6deyS3BuCzRSL4NvI2FCjscH6V41hqd2cnn2l6BlUKBHllFALlZLdVighCuJFYBex8v6mmramQK/6xLg4w3ccwSKkQW3j/AHY7c4p9epUj9MEiJKfeS3Vmki/sGaIDxU54Hf3FeXcmfUJfU+DIC76YmvrAiztmDDsWFKrssR8nqVs4IxF2paTf6NpiC9GI3IUH505SLLcgYgs2FmL7piYLaR/E7p5wPDjhGSQR6ijF7Kx9MwhWXk4gY6H16xnaKO2uTz3VBgfrTW1av9Q5ikTZ9LcThc6LqWnqz6p8ZAF+ztwpb8a7zqxCoBn8zSpYeowMaHqrXTR2NndO8nnwx5wexJph1VWMu3EEVMp9Evum/wDhtc3CrLr0m5uCbaFsAD5tXmvrHsO3TL/JmvaFGSZ9Ba303p+xHiBI4UGFijGM0ltLVUc6lsk+w5P/ABEq1l5wkgeo+vJrhJIbfENuvGAcD8T61SVsuAXpfsP956mn0tdPqc5aR8EVzqjm6upHWAdpGGC3yQU1mrp9Cjn8f7x/kLn8QrTbxZbh7WG22QA43P3b+/alWU8bi3MV5i0ro5jb3LFQieUbwuS/I4HFTLWpTe3I9pO7ZO2NtFls9M1KWVbIrPIAM7AQ2fbHY+9HWbqALGwR/pE2frDYDiNL9NInhF3Ms6TxsJQGU+bHOOOKcTpXqLIfV/TMnVbQ2PaRHXWvRahcRyQqwIXzRsP60NYNtzWES7TVmtMGQu9mk3K5H19qt6HMMgZ4MMtNVvLLaAxljOA0bDII7YpT6eqzvg/eHuZR6hmNba5stR8ON2FpdPCYQCP3aJnjHtUzJbTz2M5/ME7Xzt4OI6sBe2a21qsk0ZmlGySNsqyAcKPTnjn5Vh1QcllP8faJNRHftK+ztI4lDThZpD3Zxhc/TtUItsZvRAfbiUGlrGqswVCvuoyBXq/D1NbFnEguOeoh65udSuLEwaYjtB9+SA5am36trW8arx9/vG6atF9TnmQum6FrdwBcGyUQlv8AFuZRt/IGs8JbgSl7V6Jl3pukykW1ze6h8QGbCR7cRqfU4rq9CWGWI2/Yf7yd7k+lRKC6hmMg+GUNHt7lq9PclYCovEjB+8RWF9dRxA61siTcERm4ZyRnsOPftjsa8WvUknFvGJ6T1qTivmOE55iUbT6j+dUgf4epOTjuLuodEg1yxNrdKTHnI2n1rGVs8cQkdR3BunumINKnE4Z5JQMKWbO0fKlpW5bJhWWgjAjxrmCFmBcySD7q+Y/39aZZqKqB6z/ESEdhx1ALzTzrLR+LbqqD3wSfr6fzqAtbqW/STH5MarrUDnmMrXS4LbLSAbvU+uKtr+EovqvMQ+pZuFivXupbfS4XW28PcoOWb0prahEUrQMTa6GJBafKNY1e/wBbviqGSeTOQH4QfhUSVqn6lnvPZTCDCRlo3QV3cKt3doJWHIMnEafPb6/yrXvtZf0lwP4i3urBwxyYJrc+naVMMXZu5wNuAQIx+FBXU9nHQh5Y8k4i/TNSl1G/ja4A8PPlCoBGMf68etPspSpCF7m7W2l8cSw0eSMpc300EUd8dwhDHOTnyk+9ShCti1e0kfJXcI80hf8Ap5+M/wAdRgsCVVj3yKH4g/VaxYHORAIHkvNcmuPiSkChQ0C5jYbTg59SOPmKdqVFVCqQDxOHviH63DpFz4K3WnRXqsQHcINyAngg9/T0qfR1ekncR+0wPYD3E+q9BdOx2D3wuLi3gjAcmElwAfb5VRRde7ld2QPv/wATfmG3YKxWf+HrywLNZaxDNA8fioZ4+WTGQRt+VMF9m/YU5/ePGqUdgwWToDWZm8KGS3kKLldshHB7HBpnnZDjYef2gm6k85xHOhdJdVWbJHMtvJAuMK03Kn5YHFT3Um71V1Nn+P7zvmqhxmWNzpepeGngW9qJCPM8jbyPoDx/Ol1aXV1j1L/n/aS+ShmyxMX3l5Nooii1W7L7yQQpxnP8OABx7Uq1NShPP8R6olw/TEWXeqxqU/Y0k84zuaNlxn68ViW2qeTDFZI9YmsE/UssoNvbWlvGzFmMk5Yt9VC/61WusUfST3nqAU46lLZQXCwwC4bdLCWZW+yAT34z2pT6y1wAOOYoqoyYYYpJfM8smf8AKKSfMxzmCGVeMSH1q5WPS21601GOSKJziG4VZI+SThs4Cnv3xjOPlVVYc27HAOY/cq8EEe+RGOndVCZraw8BLK7ljjeGGQl45QwBwrAHAHFNVbORURgHrGYBqXtuY5t+o7fbJ8QCHjbEjxZdB+IFbVqHbgrBbT/4TO15dkvYxW6idLx9ryLJgRLjPbH86bYhb9Pdgn8xScbmPGI3tba2jJEYBKnB8oFPp+HaVG3dyd7XPc7yTrGjYIGO+at8gVcJxFgZk9q+pySRPHExPzAzj6fOvM1mpCrycmVUVEtI+DSLvVrp9ytK+49jwo/zN6fT9K88Gy3isS/K1csYbM/T/SCEXJju7wdraIDYh9M++Pc/kKoSpVPPqP8AlAzbqOfpWQfU3X2ra6WggcxwHjw4zx+Pv/KqxSTzYYypErOKhk/mLdK6du7yQSXZcKfQHzN/oKVdrq6xtSVrpwPVacyvtekyYGEWVKDcqp9lfqfWoV1Ts2cZm26hSu0DAnK3klSa1RtyM8i+GqtlXAPA5x+NV1bRY3vIX/8AGBLq6vCvTElyEje9QYeJeMnOPn6fOmW11OosPY4MmXPl2+05aZd29tp4uZg3nBO6TG4D1Uc5rz9eOFQH3jQjMcCA28kc5W8sHmjhkOXO/wCz5j3ByMYwMfT8K6FdKAmOTmc/DYMQdIzA22sXeoRFo45I4xnO1Y2JycDGBkJ+X1p9VdSjP4gNv3YMuNEtRamaO+WBr6FSsMatx4YUY+gyDW1qRqfV7e37CJsJIBHUb6b44eRJ4EWPIaNg+TzncvPbBH60+0EELtiWI9jHAGBXqqMCImr/AGCaTeAUzNWQXU1lZ39+yXuptb+GAV2Y5z7g96+Z1LWBsqAf9Z6ensdE9IkldzXehSNtljmt85EygqrD6H1pK1rf+DLhcSMsI90nqa9uIgbWxguwBk+EwB/SgYGo+viJZKm9zDYuvdOhkMWoWN5ayr3Vo9w/LvV1YQjK8yY1E9GNE6z0GRQyaggB9CCD+PFMJH2gfLWSD0fRZuoF11ILtomaYCNgB4bKM8eH/Dgr+NEA3obHXJlD2bO4brerJptzHDcSRwz+WMRwtuLem4KBhQMf3mo/l2vZ3Qfv/wC4asFGAY0k0a11Hp82s83hRJ52hFsrEuPvL6c+mKqpZFrGG/uP6xNhbeDiHaPdX2idO2b3m+YyyrCrSRhZlQ8LwO+PaqqnZkzjAirEV7MAx/baiIIfClcvOOGwO5rDqNnpBiTUWOYJMLm6fcFdFz29TUb2WWcCNARBONza2ljA1xq90scK9o08pb6nufwrRp0X1WQ1sdztrEiOo+u5ZF+D0aI2dp2LKMM/0x2puS4wOBKF06Ic2cmRUWl3equWfcqk85Od39TXNqK6OpSKzZyx4ld090jHFIDIpll9FA4FeddqrLztSEbEpHE+g6Z02ke1rgAY+6tOo0B+p5592sJ4Wduqilh0zfGACM+EVBA7Zq6xVqr9IiNOTZaNxnyfSb23neBdQYuYHG1GZjx2yDnv9KFQVsBA4Pcsflcymvr3Gloti3ihHHLnhhnnmoa8jVHd0cztvoyO5rOUutPcljE6BnERXlRS9U7eUKBxGVjAzOGqx6dBZo4towVjMqkqI2Eu3O4Y7557/OvWbcqbfwJOG9RJnPpi6Z9OtmEvgw3EzJKQoxyfKcH04Of7wNYFJ2/1m3P5Tn7dRt03fPql9etO2y6eOSMXf2uM4BIHAzj6dhQ1IfOXLd5i7WU1BQJRaXPO11bu00sgkPmWRQpi25AyB3zjv86LUWfrod0XgeM8SqV1x3r2EtUjOZDjEFv7lYojxUes1CKmBGVISZ851mR/ir57iJWcgFVIzgenPpXzNoY2gjiexRs2ASPOv3Mb7XhMluAQEfkCvSSoYzOsGOYfp3wWoP4tnaLb3CEMGXy7vy4o2VQu12H8/wDMQf2n0a0lhkxNCoe1EeAZ4wxLDvTBRSrgVHj88yYsxX1cTqLXQZgJLjSrVJG5I8ML+lPAX3SDhh00Du+nrC6UI6tGBnHgnwyCfXI9e35VCtQVtw7lXkOMRfPpi290F1G2/adukeIpZId0ik+hb2yM1xuZBtI/pNChxuHBi1+mtRuLYXdkphmDbFg8Qouz3J9TmtpyE/JhO43YJlhDprzJpjXLqHsyGYYyWOMYqoKCyvxgSMsV3Ae8YR20SvIyjzOxZj9aHYhJbEHccYi3UNaSJjBYKss/qfuofmfX6Um7UioYXuNrp3cv1JPVdB1XVJvGuWeSRj5VP3foPSkhLXOXlB1KINtYnWPo+GGHfq3mJxtiTgt/Sl2ixOc4mJqC3QjbSunAWwkKwQD7vypVWkstbc0J9TsXGZU2tpDaoqwoBj19TXrVUJUPSJA9jP3CPWnReIh62gFz09cRuCUypcD+HPNJ1BIrJXuO04HkGZ8Qa0Nw0rwQNt3sxAPMaCsDFQATzLm5JaM4b6+sfEj8KR43h5Xjd8j35+tBZVWWUscHMFCxHEP03qiAf8vfbZPFzu3LtI4+f0qbV6Eu29IVbjowp9WsNWUwTIYIWjwZFIAVcYGfnxVF/lSsOOW44gLjcRCorfS9NtLfTYJElWTcTIVBDIScgkd+CaKq93QO8wLg4HUZ2GlRaHBdPHcPK0ygMyfaXvz+BP61LormusJYdAYgWKAABDun1iEr6h8UE+IGWiGMHHAbPfnv+NL1OoLXEY64m7MLKmG7WYEQtvI+6nJ/On1M5/t7yVlwYNqNi86CSXn+FM8A+5rbtO6nc81bPYST6mlhtL5rhx59gQuPX8KiLnybMS2n6MyVNnb3V4oYFpWyR4AxuHvimizC5XiPIIEqdF0kWF/4LSRyjgjPBPyrbdMWb7/sZP5CRLe0NmoHhokbDjFW6dNMB6gQZFZvzzzOz+CW+0h/9QaJxz6X4gAH7RDo+pQ6naLPDlfRlPdT7frSgQepc67TiMlY5wM/hWiLInQMPaizAxPSTJEjPIwVAMkn0rSwHMzGeIkkur7XD4GmgxWf3puzOPl7CpzZZcfHSI4KlXqfkx5pei22nRYRQznuxr0tN8PrpGW5b7mS3XtYfxCJnC5WMDfjv7V11qp6a+4CrnucIrQFvEn8759fSpVqydzxpfHAhY9vSqePaLxM/hisnTBNYTOgWrQm6025gX7TxMAaXZ6kxCrO1wZ8eWJpNLZAWgunYxNj1Hep0YrdkdS5vUgzD9Y02zg0Rb+Kcm6lGxoc5YURBdlbd79QUYqxWIbG2txZyy3EKuiITyvtz/tWap3DKixlIXBLcxXcafFHbXEpDZ2ZWMMRjnHYfhVm85AicDk4nO1td0EQSWYO8bMQspwMEngfMYombgwAOiY6sYroWJuPjrjyyGJsPn0XH8z+VJ45wMdQu+JYdF6dbSnZcRBtqkksxKsQSOB7V516k24z7wyxCZn0uziiiiCwoqLj7or3NCiLXhRPOsJJ5muoyCK2dvYZoNftVMmFUMtifJeo71Ly8FuhDANlvlXgVrjNh956gB4Ec9F6IX1X46QfuoVIT/MaOrDuFgamwgcS4uNPtpyGaJQ4PDD0q56gfp4kQc+/M5rp8AGAGUZzkGgUkHD9TSxm8FjDEG3SyuWOeT24Ax+lU+HTvyxOZhsefMNJ6li0uKW4Fs8kU8xd0U/YPZhj/wCf7NS114wpl7pnmWOma/bX6QybSiXH+E+eGPsfY0ecHbFbTjIhOo61Z6cVjmZ2mbkRRIWbHvgdhXTFUtFs+rprNtdWVussMqpmXxlI2J/fpQOpOAIWAnJlPoj20dgscDIUjA8yng16ekKVIQexIrgzNkwo3Hi+WEgj3oLdSX9KTAmO5qoCDjk+ppKqBN7md2K3M3E9urszsTOa3MyeJrMzpqx9u9DmbifOus+n5be6e/t97W7vuKKfse9I+luZVWQy4MWalNG+jQtBGJHOwc+nuTUdCkao7jKW+jic5NOiutKwky5wdoXjcSeRj611t7LeAOZ1YAQxTrAVbafw1zFtGWC/ayeefrivS2kMDEqRg5mlpa5tbNWgcMIATJkDaoXCj8Rj/wCqYSWzA4Bz2I00zzdPNKqJEq3vl54LFD/T9aBFZSR3MdwSCoxKrpJBFOZWAWyUskKsMEAfKorlUWziWasCWJ1OKPCKDn5jiq69eETCiT+AnkmarOt3P4JVu3LelJW35q3DTShrG4QCLpPRbe4lujbmWZzuJkJIz9Kqs0tCAgnJg+exveYmka3QNZsoUOqbQO5J7V52xlXckcCD9cdjOOatGccxEwRWEZmz1cJ0hb/pK2Ms13ZAJK53GM/ZJ9fpnP6D2qV1ZV9PQl4s9jJCRY7FZrazzJcJMD4Exz4RPsSRxk+tEpNpUtx/3qHuwDiMrW5vdIkS7tkhvfikU7huD5yeAOfb3xxR4AYqRAYlljTpSX46XUZDJALyc7Tbb8FQfY5pipnqJsbgZ6jqw6dazNp4N4XjjjKTAZw59CPpQPXk4BmC3PYlFCixKAgxTkXbFE57nXNMgzFZiZMYNZibNhXTp4msmTFdNnOWJZY2RwGVu6kULLmdkgyT1DpWaKK4WwkBikBwrDzKflUr1MrBgMytL8jDRPptg8VvLZ30ZDeIcsoI/EVLqgfIHWOrPpIiW40s3N89pI0kXiDYAoyvHP8ApXoWX4rFg5ituTtM6XWj3dpLZWwIeFUEW71YhRz8sDP5Uym03Vb8cmAwCHb7R0/T76Zo0tq0wkSWRXC5wF8pBIpGm1Du3IgMq+0OXUtJ02C3uLh91yU2qu7czbTjtSba7HtMYq8YnS31mK8upprlGitYiAjsfKcjNTkYwBzDC4EZtrVhDGr+MwVzhCEbn6UQUr+IG0twI2imur9f3JEVvj/GI8z/AEFetWbtUm1eB/i+8jYLWcnkxLDqaS9QfsyKNi0bFhKyD8ayz4a1Cht2eZyX+TMp+a4qZ0xWYmzFdidFjAknGMY7GlkSqI9Z0L4u5a5gEfiSKFkVwcMBnHb6mp7K2IOIxHx3An0UaYLedbAzqp84txkp9Ae9BUlin1nMJnBGBD9PilvNUtriPT3tLS3UkCQBNzfJRVQyDkGJONpBlKgAGAMD2pg46iZ0BogYM2zRzJ7NdOmc1k6YrZkzXTpnisxOmp7106e+tZibNGjjcESRhgfegKKfacCR0Yul0HT5btLswYmTsQTj27UJqG3aIYsaDaxoKXaq8IyyHhD2796U1diD9OMSxSfXEGqWV9I4S4uZUCyq6jHAxwR9CKh89lecjEsARhxEUnTpTewjlYZZlZTyuf8AT+lPS82MBmYwC8w/p67tNNhuPFge4KjKZTdk/OnHTDO4/wCcTY5bqD3utSTarHczx+JHtxDb4wq/Wr9NoBqiC/0j7RF9/hrKp2ZfWGvo9grvCzzY2rHEvevatrqp6OFnk1Na3DDmE2cLySfG3MEcc5G3C/dFeRdd5G46lqqFGIfSIUxWTZiunRaaWZVPZIGRWe06ZXg/XvXD8zDOq/gPwreIJmwNFMxNga0GYRNwa3MHEzmizOnga6ZiZzWzMT2a6diZzXTpmumT3pXTZisnT1cZ2Jg8kH2oZ2JrKiOPMAfkRQOit2JqkjqcPgbdsgx4BB4BpS6ZM5HEPytjE52ukWFqSbe3VSe+eaaageCcwd7Qg2Vsc7oYyD7qDTkLVjCniLPq5Pc7IiRqFRVUYxgDFcSTOxN+ffNZNnqyZPVmJs9XTp//2Q==');
+}
+
+/* Other pages get a semi-transparent overlay to ensure readability */
+.dashboard-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=1470&auto=format&fit=crop');
+}
+
+.services-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.92), rgba(245, 246, 250, 0.92)), url('https://images.unsplash.com/photo-1604594878249-b29961927933?q=80&w=1470&auto=format&fit=crop');
+}
+
+.careers-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1484&auto=format&fit=crop');
+}
+
+.media-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1470&auto=format&fit=crop');
+}
+
+.news-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1470&auto=format&fit=crop');
+}
+
+.about-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1520466453697-372c7336bdd5?q=80&w=1470&auto=format&fit=crop');
+}
+
+.contact-page-bg {
+  background: linear-gradient(rgba(245, 246, 250, 0.9), rgba(245, 246, 250, 0.9)), url('https://images.unsplash.com/photo-1587560699334-cc426240a3a9?q=80&w=1470&auto=format&fit=crop');
+}
+
+/* ==========================================================================
+   12. Back to Top Button
+   ========================================================================== */
+
+#backToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1010; /* Above most content */
+  border: none;
+  outline: none;
+  background-color: var(--primary-dark);
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
+  box-shadow: var(--shadow);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#backToTopBtn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#backToTopBtn:hover {
+  background-color: var(--primary-light);
+}
+
+/* ==========================================================================
+   13. Print Styles
+   ========================================================================== */
+
+@media print {
+  /* Hide non-essential elements */
+  .sidebar,
+  #backToTopBtn,
+  .toggle-btn,
+  .emi-calculator-card,
+  .print-btn {
+    display: none !important;
+  }
+
+  /* Reset body and main container for printing */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .main {
+    margin-left: 0 !important;
+    padding: 20px !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Style the printable cards */
+  .loan-content-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    page-break-inside: avoid; /* Try to keep cards from splitting across pages */
+  }
+
+  .services-hero.loan-content-card {
+    background: none !important;
+  }
+
+  .loan-content-card h1, .loan-content-card h2, .loan-content-card p, .loan-content-card li,
+  .services-hero.loan-content-card h1, .services-hero.loan-content-card p {
+    color: #000 !important;
+  }
+
+  /* Ensure FAQ answers are visible */
+  .faq-answer { max-height: none !important; }
+  .faq-question::after { display: none; }
+}
+
+/* ==========================================================================
+   14. Responsive Design
+   ========================================================================== */
+
+/* For Tablets */
+@media (max-width: 992px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .news-article-card {
+    flex-direction: column;
+  }
+  .news-image {
+    flex-basis: 200px; /* Set a height for the image on smaller screens */
+  }
+}
+
+/* For Mobile Devices */
+@media (max-width: 768px) {
+  /* Hide desktop navigation and show mobile toggle */
+  .top-nav-bar .nav-left nav {
+    display: none;
+  }
+  .mobile-toggle-btn {
+    display: flex; /* Use flex to keep alignment consistent */
+  }
+
+  .main {
+    margin-left: 0; /* Main content takes full width */
+    padding: 15px;
+  }
+
+  .page-title { font-size: 1.8rem; }
+  .about-hero { padding: 40px 20px; }
+  .about-hero h1 { font-size: 2rem; }
+  .service-option-card.gold-exchange-card::before,
+  .service-option-card.gold-exchange-card::after { display: none; }
+  .video-grid { grid-template-columns: 1fr; }
+}
+
+.site-footer {
+  background: #111;
+  color: #eee;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.footer-section {
+  flex: 1;
+  min-width: 280px;
+  margin: 20px;
+}
+.footer-section h3 {
+  margin-bottom: 15px;
+  color: #ffcd00;
+}
+.badges .badge {
+  display: inline-block;
+  background: #222;
+  padding: 6px 12px;
+  margin-right: 10px;
+  border-radius: 20px;
+  color: #ffd700;
+  font-size: 14px;
+}
+.social-links a {
+  color: #fff;
+  margin-right: 10px;
+  font-size: 18px;
+}
+.footer-section.links ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-section.links ul li a {
+  color: #aaa;
+  text-decoration: none;
+}
+.footer-section.links ul li a:hover {
+  color: #fff;
+}
+.footer-bottom {
+  border-top: 1px solid #444;
+  margin-top: 30px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.footer-links a {
+  color: #999;
+  margin-left: 15px;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  color: #fff;
+}

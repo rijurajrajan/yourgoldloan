@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪙</text></svg>">
+  <title>Media - RR gold loan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css.css">
+</head>
+<body class="media-page-bg">
+
+  <!-- Top Horizontal Navigation Bar -->
+  <header id="top-nav" class="top-nav-bar">
+    <div class="nav-left">
+      <a href="index.html" class="logo">BSGL</a>
+      <nav>
+        <a href="index.html"><i class="fa fa-home"></i><span class="text">Home</span></a>
+        <a href="loans.html"><i class="fas fa-hand-holding-dollar"></i><span class="text">Loans</span></a>
+        <a href="services.html"><i class="fa fa-cogs"></i><span class="text">Services</span></a>
+        <a href="about.html"><i class="fa fa-users"></i><span class="text">About</span></a>
+        <a href="contact.html"><i class="fa fa-envelope"></i><span class="text">Contact</span></a>
+        <div class="nav-dropdown">
+          <span class="dropdown-toggle"><i class="fas fa-layer-group"></i><span class="text">More</span><i class="fas fa-chevron-down"></i></span>
+          <div class="dropdown-menu">
+            <a href="careers.html"><i class="fa fa-briefcase"></i><span class="text">Careers</span></a>
+            <a href="media.html" class="active"><i class="fa fa-video"></i><span class="text">Media</span></a>
+            <a href="news.html"><i class="fa fa-newspaper"></i><span class="text">News</span></a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="mobile-toggle-btn">
+      <i class="fas fa-grip-lines icon icon-menu"></i>
+      <i class="fas fa-times icon icon-close"></i>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div id="mobile-sidebar" class="mobile-sidebar">
+    <div class="mobile-sidebar-header">
+      <div id="close-sidebar-btn" class="close-btn">&times;</div>
+    </div>
+    <nav>
+      <a href="index.html"><i class="fa fa-home"></i><span class="text">Home</span></a>
+      <a href="loans.html"><i class="fas fa-hand-holding-dollar"></i><span class="text">Loans</span></a>
+      <a href="services.html"><i class="fa fa-cogs"></i><span class="text">Services</span></a>
+      <a href="about.html"><i class="fa fa-users"></i><span class="text">About</span></a>
+      <a href="contact.html"><i class="fa fa-envelope"></i><span class="text">Contact</span></a>
+      <a href="careers.html"><i class="fa fa-briefcase"></i><span class="text">Careers</span></a>
+      <a href="media.html" class="active"><i class="fa fa-video"></i><span class="text">Media</span></a>
+      <a href="news.html"><i class="fa fa-newspaper"></i><span class="text">News</span></a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="media-page">
+      <h1 class="page-title">Media Center</h1>
+
+      <h2 class="media-section-title">Customer Support Videos</h2>
+      <p class="page-subtitle">Watch our guides to help you through the loan process.</p>
+      <div class="video-grid">
+        <div class="video-card" data-video-id="M7lc1UVf-VE">
+          <div class="video-thumbnail">
+            <i class="fas fa-play-circle"></i>
+          </div>
+          <h3 class="video-title">How to Apply for a Gold Loan Online</h3>
+          <p class="video-description">A step-by-step guide to our digital application process.</p>
+        </div>
+        <div class="video-card" data-video-id="M7lc1UVf-VE">
+          <div class="video-thumbnail">
+            <i class="fas fa-play-circle"></i>
+          </div>
+          <h3 class="video-title">Understanding Your EMI</h3>
+          <p class="video-description">Learn how your Equated Monthly Installments are calculated.</p>
+        </div>
+      </div>
+
+      <h2 class="media-section-title">Client Testimonials</h2>
+      <p class="page-subtitle">Hear from our valued customers about their experience.</p>
+      <div class="video-grid">
+        <div class="video-card" data-video-id="M7lc1UVf-VE">
+          <div class="video-thumbnail">
+            <i class="fas fa-play-circle"></i>
+          </div>
+          <h3 class="video-title">"A Lifesaver in an Emergency" - Priya S.</h3>
+          <p class="video-description">Priya from Bangalore shares her story.</p>
+        </div>
+        <div class="video-card" data-video-id="M7lc1UVf-VE">
+          <div class="video-thumbnail">
+            <i class="fas fa-play-circle"></i>
+          </div>
+          <h3 class="video-title">"Quick and Transparent Process" - Amit K.</h3>
+          <p class="video-description">Amit from Mumbai on his seamless loan experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div id="videoModal" class="video-modal-overlay">
+    <div class="video-modal-content">
+      <span id="closeVideoModal" class="video-modal-close">&times;</span>
+      <div id="videoPlayerContainer" class="video-player-container">
+        <!-- YouTube Iframe will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <div id="footer-container"></div>
+  <script src="js/script.js"></script>
+
+</body>
+</html>

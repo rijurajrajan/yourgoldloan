@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪙</text></svg>">
+  <title>Our Loans - RR gold loan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css.css">
+</head>
+<body class="services-page-bg">
+
+  <!-- Top Horizontal Navigation Bar -->
+  <header id="top-nav" class="top-nav-bar">
+    <div class="nav-left">
+      <a href="index.html" class="logo">BSGL</a>
+      <nav>
+        <a href="index.html"><i class="fa fa-home"></i><span class="text">Home</span></a>
+        <a href="loans.html" class="active"><i class="fas fa-hand-holding-dollar"></i><span class="text">Loans</span></a>
+        <a href="services.html"><i class="fa fa-cogs"></i><span class="text">Services</span></a>
+        <a href="about.html"><i class="fa fa-users"></i><span class="text">About</span></a>
+        <a href="contact.html"><i class="fa fa-envelope"></i><span class="text">Contact</span></a>
+        <div class="nav-dropdown">
+          <span class="dropdown-toggle"><i class="fas fa-layer-group"></i><span class="text">More</span><i class="fas fa-chevron-down"></i></span>
+          <div class="dropdown-menu">
+            <a href="careers.html"><i class="fa fa-briefcase"></i><span class="text">Careers</span></a>
+            <a href="media.html"><i class="fa fa-video"></i><span class="text">Media</span></a>
+            <a href="news.html"><i class="fa fa-newspaper"></i><span class="text">News</span></a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="mobile-toggle-btn">
+      <i class="fas fa-grip-lines icon icon-menu"></i>
+      <i class="fas fa-times icon icon-close"></i>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div id="mobile-sidebar" class="mobile-sidebar">
+    <div class="mobile-sidebar-header">
+      <div id="close-sidebar-btn" class="close-btn">&times;</div>
+    </div>
+    <nav>
+      <a href="index.html"><i class="fa fa-home"></i><span class="text">Home</span></a>
+      <a href="loans.html" class="active"><i class="fas fa-hand-holding-dollar"></i><span class="text">Loans</span></a>
+      <a href="services.html"><i class="fa fa-cogs"></i><span class="text">Services</span></a>
+      <a href="about.html"><i class="fa fa-users"></i><span class="text">About</span></a>
+      <a href="contact.html"><i class="fa fa-envelope"></i><span class="text">Contact</span></a>
+      <a href="careers.html"><i class="fa fa-briefcase"></i><span class="text">Careers</span></a>
+      <a href="media.html"><i class="fa fa-video"></i><span class="text">Media</span></a>
+      <a href="news.html"><i class="fa fa-newspaper"></i><span class="text">News</span></a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="services-page">
+
+      <!-- Hero Section -->
+      <div class="services-hero loan-content-card">
+        <button id="printLoanDetailsBtn" class="print-btn" title="Print Loan Details"><i class="fas fa-print"></i></button>
+        <h1>Gold Loans: Our Commitment to Fairness</h1>
+        <p>We believe that valuable credit should be accessible to everyone. That's why we've designed our gold loan solutions with your best interest in mind, ensuring a fair and transparent experience from start to finish.</p>
+      </div>
+
+      <!-- Features / Benefits -->
+      <div id="loan-benefits" class="gold-loan-benefits loan-content-card">
+        <h2>What You Can Expect</h2>
+        <ul>
+          <li>No hidden costs: Enjoy a zero processing fee and no surprise charges.</li>
+          <li>Affordable rates: We offer some of the lowest interest rates in the market.</li>
+          <li>Maximum value: Get the most out of your gold with our maximum loan-to-value offerings.</li>
+          <li>Convenience: We provide on-demand pickup and return of your valuables for ultimate convenience.</li>
+        </ul>
+      </div>
+
+      <!-- EMI Calculator -->
+      <div id="emi-calculator" class="emi-calculator-card loan-content-card">
+        <h2>EMI Calculator</h2>
+        <div class="calculator-inputs">
+          <div class="input-group">
+            <label for="loanAmount">Loan Amount (₹)</label>
+            <input type="number" id="loanAmount" placeholder="e.g., 500000">
+          </div>
+          <div class="input-group">
+            <label for="interestRate">Annual Interest Rate (%)</label>
+            <input type="number" id="interestRate" placeholder="e.g., 12.5">
+          </div>
+          <div class="input-group">
+            <label for="loanTenure">Loan Tenure (Months)</label>
+            <input type="number" id="loanTenure" placeholder="e.g., 60">
+          </div>
+        </div>
+        <button id="calculateEmiBtn" class="apply-btn" style="width: 100%; margin-top: 20px; padding: 15px 25px;">Calculate EMI</button>
+        <div id="emiResult" class="emi-result" style="display: none;">
+          <h3>Your Monthly EMI is:</h3>
+          <p>₹ <span id="emiValue"></span></p>
+        </div>
+      </div>
+
+      <!-- Value Section -->
+      <div class="gold-loan-value loan-content-card">
+        <h2>Unlock the Value of Your Gold with a Loan You Can Trust</h2>
+        <p>Your gold is more than just an asset—it's a way to access the funds you need. We're dedicated to making this process as transparent and beneficial for you as possible.</p>
+        <ul>
+          <li>Savings: Our low interest rates and lack of processing fees mean more money stays in your pocket.</li>
+          <li>Maximum Returns: Our high loan-to-value ratio ensures you get the most cash for your gold.</li>
+          <li>Effortless Experience: Forget the hassle. We offer convenient pickup and return services for your valuables.</li>
+        </ul>
+        <p>With us, a gold loan is a clear, trustworthy path to financial flexibility. We’re committed to making your gold loan experience feel easy and reliable every step of the way.</p>
+      </div>
+
+      <!-- Quick Highlights Section -->
+      <div id="quick-highlights" class="gold-loan-highlights loan-content-card">
+        <h2>Quick Highlights</h2>
+        <ul>
+          <li>Quick disbursement – Get the best offer in the market, starting at 0.85% per month*</li>
+          <li>Personalized Service</li>
+          <li>Minimal Documentation</li>
+          <li>Faster Processing</li>
+          <li>Highly Secure Gold Vaults</li>
+          <li>Gold Insurance</li>
+          <li>Quick Release Guarantee</li>
+          <li>Hassle Free Repayments</li>
+          <li>High Loan Amount for your Gold</li>
+          <li>Quick Disbursal</li>
+        </ul>
+      </div>
+
+      <!-- FAQ Section -->
+      <div id="faq" class="gold-loan-faq">
+        <h2>Have Any Questions?</h2>
+
+        <div class="faq-item">
+          <h3 class="faq-question">What upside does a gold loan offer over a business loan?</h3>
+          <div class="faq-answer">
+            <p>Gold loans offer quicker processing times, easier application process, and higher approval rate. Since capital secured from a gold loan can be used to fulfill business requirements, it is often a more feasible option to secure quick funding.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Which loan offers a borrower-friendly repayment option - Gold loans or business loans?</h3>
+          <div class="faq-answer">
+            <p>Most business loans have a fixed tenure and fixed EMI, whereas gold loans allow flexible monthly interest payments and bullet repayments. Gold loans offer more flexibility.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Is a gold loan more affordable than business loans?</h3>
+          <div class="faq-answer">
+            <p>Yes. Gold loans start at just 0.75%* per month, whereas most business loans charge 10%-30% per annum. Gold loans are a cost-effective option.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <!-- Back to Top Button -->
+  <button id="backToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <div id="footer-container"></div>
+  <script src="js/script.js"></script>
+</body>
+</html>
